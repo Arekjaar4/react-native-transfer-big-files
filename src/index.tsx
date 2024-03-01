@@ -24,27 +24,27 @@ const COPY_FILE_END = 'COPY_FILE_END';
 // CONSTS
 const MODULE_NAME = 'WiFi_TransferFiles';
 
-const subscribeOnEvent = (event, callback) => {
+const subscribeOnEvent = (event: string, callback: (data: string) => void) => {
     return DeviceEventEmitter.addListener(`${MODULE_NAME}:${event}`, callback);
 };
 
 
-const subscribeOnProgressUpdates = (callback) => subscribeOnEvent(COPY_FILE_PROGRESS, callback);
+const subscribeOnProgressUpdates = (callback: (data: string) => void) => subscribeOnEvent(COPY_FILE_PROGRESS, callback);
 
-const subscribeOnFileCopyEnd = (callback) => subscribeOnEvent(COPY_FILE_END, callback);
+const subscribeOnFileCopyEnd = (callback: (data: string) => void) => subscribeOnEvent(COPY_FILE_END, callback);
 
-const sendFileTo = (pathToFile, address) => TransferBigFiles.sendFileTo(pathToFile, address);
+const sendFileTo = (pathToFile: string, address: string) => TransferBigFiles.sendFileTo(pathToFile, address);
 
-const receiveFile = (ip, folder, fileName, forceToScanGallery) => new Promise((resolve, reject) => {
-    TransferBigFiles.receiveFile(ip, folder, fileName, forceToScanGallery, (pathTofile) => {
+const receiveFile = (ip: string, folder: string, fileName: string, forceToScanGallery: boolean) => new Promise((resolve, reject) => {
+    TransferBigFiles.receiveFile(ip, folder, fileName, forceToScanGallery, (pathTofile: string) => {
         resolve(pathTofile);
     });
 });
 
-const sendMessageTo = (message, address) => TransferBigFiles.sendMessageTo(message, address);
+const sendMessageTo = (message: string, address: string) => TransferBigFiles.sendMessageTo(message, address);
 
-const receiveMessage = (ip, props) => new Promise((resolve, reject) => {
-    TransferBigFiles.receiveMessage(ip, props, (message) => {
+const receiveMessage = (ip: string, props: string) => new Promise((resolve, reject) => {
+    TransferBigFiles.receiveMessage(ip, props, (message: string) => {
         resolve(message);
     });
 });
