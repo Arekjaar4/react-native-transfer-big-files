@@ -37,7 +37,11 @@ const sendFileTo = (pathToFile: string, address: string) => TransferBigFiles.sen
 
 const receiveFile = (ip: string, folder: string, fileName: string, forceToScanGallery: boolean) => new Promise((resolve, reject) => {
     TransferBigFiles.receiveFile(ip, folder, fileName, forceToScanGallery, (pathTofile: string) => {
-        resolve(pathTofile);
+        if(pathTofile) {
+          resolve(pathTofile);
+        } else {
+          reject(pathTofile)
+        }
     });
 });
 
@@ -45,7 +49,12 @@ const sendMessageTo = (message: string, address: string) => TransferBigFiles.sen
 
 const receiveMessage = (ip: string, props: string) => new Promise((resolve, reject) => {
     TransferBigFiles.receiveMessage(ip, props, (message: string) => {
+      if(message) {
         resolve(message);
+      } else {
+        reject(message)
+      }
+
     });
 });
 
