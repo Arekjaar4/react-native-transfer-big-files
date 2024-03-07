@@ -126,9 +126,9 @@ Subscribe to file transfer progress updates.
 ### subscribeOnFileCopyEnd(callback: (data: string) => void): EmitterSubscription
 Subscribe to file copy end events.
 
-## Contributing
+## Hi, Do you want to collaborate by inviting me to a coffee? 👋
 
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
+[![ko-fi](https://drive.google.com/uc?id=1rDAyRheZTLdnagb9FsJ3-fFt7Ut3LX8_)](https://ko-fi.com/arekjaar)
 
 ## License
 
