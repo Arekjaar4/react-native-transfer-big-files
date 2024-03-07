@@ -20,6 +20,7 @@ const TransferBigFiles = NativeModules.TransferBigFiles
 // ACTIONS
 const COPY_FILE_PROGRESS = 'COPY_FILE_PROGRESS';
 const COPY_FILE_END = 'COPY_FILE_END';
+const DISCOVER_PEER = 'DISCOVER_PEER';
 
 // CONSTS
 const MODULE_NAME = 'WiFi_TransferFiles';
@@ -32,11 +33,16 @@ const subscribeOnEvent = (event: string, callback: (data: string) => void) => {
 const subscribeOnProgressUpdates = (callback: (data: string) => void) => subscribeOnEvent(COPY_FILE_PROGRESS, callback);
 
 const subscribeOnFileCopyEnd = (callback: (data: string) => void) => subscribeOnEvent(COPY_FILE_END, callback);
+const subscribeDiscoverPeer = (callback: (data: string) => void) => subscribeOnEvent(DISCOVER_PEER, callback);
+
+const stopDiscoverPeers = () => TransferBigFiles.stopDiscoverPeers();
+
+const discoverPeers = (address: string) => TransferBigFiles.discoverPeers(address);
 
 const sendFileTo = (pathToFile: string, address: string) => TransferBigFiles.sendFileTo(pathToFile, address);
 
-const receiveFile = (ip: string, folder: string, fileName: string, forceToScanGallery: boolean) => new Promise((resolve, reject) => {
-    TransferBigFiles.receiveFile(ip, folder, fileName, forceToScanGallery, (pathTofile: string) => {
+const receiveFile = (folder: string, fileName: string, forceToScanGallery: boolean) => new Promise((resolve, reject) => {
+    TransferBigFiles.receiveFile(folder, fileName, forceToScanGallery, (pathTofile: string) => {
         if(pathTofile) {
           resolve(pathTofile);
         } else {
@@ -47,8 +53,8 @@ const receiveFile = (ip: string, folder: string, fileName: string, forceToScanGa
 
 const sendMessageTo = (message: string, address: string) => TransferBigFiles.sendMessageTo(message, address);
 
-const receiveMessage = (ip: string, props: string) => new Promise((resolve, reject) => {
-    TransferBigFiles.receiveMessage(ip, props, (message: string) => {
+const receiveMessage = () => new Promise((resolve, reject) => {
+    TransferBigFiles.receiveMessage((message: string) => {
       if(message) {
         resolve(message);
       } else {
@@ -66,11 +72,14 @@ export {
 
     subscribeOnProgressUpdates,
     subscribeOnFileCopyEnd,
+    subscribeDiscoverPeer,
     sendFileTo,
     receiveFile,
     sendMessageTo,
     receiveMessage,
     stopReceivingMessage,
+    discoverPeers,
+    stopDiscoverPeers,
 
     // system methods
     subscribeOnEvent,
@@ -78,5 +87,6 @@ export {
     // const
     COPY_FILE_PROGRESS,
     COPY_FILE_END,
+    DISCOVER_PEER
 };
 

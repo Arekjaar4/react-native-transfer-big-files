@@ -10,13 +10,121 @@ npm install react-native-transfer-big-files
 
 ## Usage
 
+Import the required methods from the library:
 ```js
-import { receiveFile, receiveMessage, subscribeOnFileCopyEnd, subscribeOnProgressUpdates } from 'react-native-transfer-big-files';
+import {
+  discoverPeers,
+  subscribeDiscoverPeer,
+  stopDiscoverPeers,
+  receiveMessage,
+  sendMessageTo,
+  receiveFile,
+  sendFileTo,
+  subscribeOnFileCopyEnd,
+  subscribeOnProgressUpdates
+} from 'react-native-transfer-big-files';
 
-// ...
-
-receiveMessage(ip);
 ```
+
+## Example
+
+```js
+import * as React from 'react';
+import { StyleSheet, View, Text, AppState, FlatList, Button } from 'react-native';
+
+// Import methods from the library
+import {
+  discoverPeers,
+  subscribeDiscoverPeer,
+  stopDiscoverPeers,
+  receiveMessage,
+  sendMessageTo,
+  receiveFile,
+  sendFileTo,
+  subscribeOnFileCopyEnd,
+  subscribeOnProgressUpdates
+} from 'react-native-transfer-big-files';
+
+export default function App() {
+  // State variables
+  const [peers, setPeers] = React.useState([]);
+  const [message, setMessage] = React.useState('');
+  const [progress, setProgress] = React.useState('');
+  const [received, setReceived] = React.useState('');
+
+  // Subscribe to discover peers event
+  React.useEffect(() => {
+    const discoverPeerSubscription = subscribeDiscoverPeer((peers) => {
+      setPeers(JSON.parse(peers));
+    });
+    discoverPeers('ip');
+
+    return () => {
+      discoverPeerSubscription.remove();
+    };
+  }, []);
+
+  // Handle message received
+  const catchMessage = async () => {
+    const message = await receiveMessage();
+    setMessage(message);
+  };
+
+  // Handle file received
+  const catchFile = () => {
+    receiveFile(`/data/data/com.transferbigfilesexample/cache/`, 'document.pdf', true)
+      .then(() => setReceived('File received successfully'))
+      .catch(() => setReceived('Error receiving file'));
+  };
+
+  // Render method
+  return (
+    <View style={styles.container}>
+      {/* UI components */}
+    </View>
+  );
+}
+
+// Styles
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#ffffff',
+    color: '#000000'
+  },
+});
+```
+## Methods
+
+### discoverPeers(address: string): Promise<number>
+Discover peers on the network.
+
+### subscribeDiscoverPeer(callback: (peers: string) => void): EmitterSubscription
+Subscribe to discover peer events.
+
+### stopDiscoverPeers(): void
+Stop discovering peers.
+
+### sendMessageTo(message: string, address: string): Promise<{ time: number, message: string }>
+Send a message to a specific device.
+
+### receiveMessage(): Promise<string>
+Receive a message from another device.
+
+### sendFileTo(pathToFile: string, address: string): Promise<{ time: number, file: string }>
+Send a file to a specific device.
+
+### receiveFile(folder: string, fileName: string, forceToScanGallery?: boolean): Promise<string>
+Receive a file from another device.
+
+### subscribeOnProgressUpdates(callback: (progress: string) => void): EmitterSubscription
+Subscribe to file transfer progress updates.
+
+### subscribeOnFileCopyEnd(callback: (data: string) => void): EmitterSubscription
+Subscribe to file copy end events.
 
 ## Contributing
 

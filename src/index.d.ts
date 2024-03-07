@@ -4,10 +4,13 @@ export let subscribeOnProgressUpdates: (callback: (progress: string) => void) =>
 
 export let subscribeOnFileCopyEnd: (callback: (data: string) => void) => EmitterSubscription
 
+export let subscribeDiscoverPeer: (callback: (data: string) => void) => EmitterSubscription
+export let stopDiscoverPeers: () => void
+
 export let sendFileTo: (pathToFile: string, address: string) => Promise<{ time: number, file: string }>
-export let receiveFile: (ip: string, folder: string, fileName: string, forceToScanGallery?: boolean) => Promise<string>
+export let receiveFile: (folder: string, fileName: string, forceToScanGallery?: boolean) => Promise<string>
 export let sendMessageTo: (message: string, address: string) => Promise<{ time: number, message: string }>
-export let receiveMessage: (ip: string, props: { meta: boolean }) => Promise<string>
+export let receiveMessage: (props: { meta: boolean }) => Promise<string>
 export let stopReceivingMessage: () => void
 
 // system methods

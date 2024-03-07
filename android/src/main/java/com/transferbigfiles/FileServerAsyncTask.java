@@ -15,6 +15,8 @@ import java.net.Socket;
 import java.net.InetAddress;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 
 
 public class FileServerAsyncTask extends AsyncTask<Void, Void, String> {
@@ -25,6 +27,23 @@ public class FileServerAsyncTask extends AsyncTask<Void, Void, String> {
   private Context context;
   private String ip;
 
+  public static String getDeviceIpAddress(Context context) {
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        int ipAddress = wifiInfo.getIpAddress();
+
+        // Convertir la dirección IP de entero a String
+        String ipAddressString = String.format(
+            "%d.%d.%d.%d",
+            (ipAddress & 0xff),
+            (ipAddress >> 8 & 0xff),
+            (ipAddress >> 16 & 0xff),
+            (ipAddress >> 24 & 0xff)
+        );
+
+        return ipAddressString;
+    }
+
   /**
    * @param context
    * @param callback
@@ -34,13 +53,12 @@ public class FileServerAsyncTask extends AsyncTask<Void, Void, String> {
     Context context,
       ReactApplicationContext reactContext,
       String destination,
-      String ip,
       Callback customDefinedCallback) {
     this.reactContext = reactContext;
     this.destination = destination;
     this.customDefinedCallback = customDefinedCallback;
     this.context = context;
-    this.ip = ip;
+    this.ip = getDeviceIpAddress(reactContext.getApplicationContext());
   }
 
 

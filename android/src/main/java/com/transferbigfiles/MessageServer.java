@@ -16,31 +16,55 @@ import java.net.Socket;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.net.InetAddress;
+import com.facebook.react.bridge.ReactApplicationContext;
+import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 
 public class MessageServer {
   private static final String TAG = "RNWiFiTransferFiles";
   private final Executor executor;
   private volatile ServerSocket serverSocket;
   private String ip;
+  private int port;
 
-  public MessageServer(String ip) {
+  public static String getDeviceIpAddress(Context context) {
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        int ipAddress = wifiInfo.getIpAddress();
+
+        // Convertir la dirección IP de entero a String
+        String ipAddressString = String.format(
+            "%d.%d.%d.%d",
+            (ipAddress & 0xff),
+            (ipAddress >> 8 & 0xff),
+            (ipAddress >> 16 & 0xff),
+            (ipAddress >> 24 & 0xff)
+        );
+
+        return ipAddressString;
+    }
+
+  public MessageServer(ReactApplicationContext reactContext, int port) {
     this.executor = Executors.newSingleThreadExecutor();
-    this.ip = ip;
+    this.ip = getDeviceIpAddress(reactContext.getApplicationContext());
+    this.port = port;
   }
 
-  public void start(ReadableMap props, Callback callback) {
+  public void start(Callback callback) {
     executor.execute(
         () -> {
           try {
+            Log.i(TAG, "ip: " + ip);
             InetAddress inetAddress = InetAddress.getByName(ip);
             Boolean returnMeta = false;
-            serverSocket = new ServerSocket(8988, 0, inetAddress);
+            serverSocket = new ServerSocket(port, 0, inetAddress);
             Log.i(TAG, "Server: Socket opened");
 
-            if (props != null) {
+            /*if (props != null) {
               Bundle bundle = Arguments.toBundle(props);
               returnMeta = bundle.getBoolean("meta");
-            }
+            }*/
 
             Socket client = serverSocket.accept();
             String clientAddress = client.getInetAddress().getHostAddress();
