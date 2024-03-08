@@ -15,13 +15,13 @@ import {
 export default function App() {
   const [result, setResult] = React.useState<number | undefined>();
   const [peers, setPeers] = React.useState([]);
-  const [message, setMessage] = React.useState([]);
-  const [progress, setProgressFile] = React.useState([]);
+  const [message, setMessage] = React.useState <string>('');
+  const [progress, setProgressFile] = React.useState<string>('0');
   const [received, setReceived] = React.useState('');
 
   React.useEffect(() => {
 
-    const handleAppStateChange = (nextAppState) => {
+    const handleAppStateChange = (nextAppState: string) => {
       if (nextAppState === 'background' || nextAppState === 'inactive') {
         stopDiscoverPeers()
         setPeers([])
@@ -43,7 +43,7 @@ export default function App() {
       setPeers(JSON.parse(peers))
     })
     discoverPeers('ip').then(setResult);
-
+    console.log(result)
     return () => {
       appStateSubscription.remove();
       discoverPeerSubscription.remove();
@@ -52,23 +52,24 @@ export default function App() {
     };
   }, []);
 
-  const setProgress = async (progress) => {
+  const setProgress = async (progress: string) => {
     setProgressFile(progress) //If the file is small, the progress will not be greater than 0.
   }
-  const setCopyFileEnd = async (data) => {
+  const setCopyFileEnd = async (data: string) => {
+    console.log(data)
     setReceived('File received successfully')
   }
 
-  const sendMessage = (ipAddress) => {
+  const sendMessage = (ipAddress: string) => {
     sendMessageTo('Hello World', ipAddress)
   }
 
   const catchMessage = async () => {
-    const message = await receiveMessage();
+    const message:string = await receiveMessage() as string;
     setMessage(message)
   }
 
-  const sendFile = (address) => {
+  const sendFile = (address: string) => {
     sendFileTo('/data/data/com.transferbigfilesexample/cache/document.pdf', address)
   }
 
@@ -76,7 +77,13 @@ export default function App() {
     receiveFile(`/data/data/com.transferbigfilesexample/cache/`, 'document.pdf', true)
   }
 
-  const ListItem = ({item}) => (
+  interface ItemType {
+    deviceName: string;
+    ipAddress: string;
+    // Otros campos si los hay
+  }
+
+  const ListItem = ({item}: { item: ItemType }) => (
     <View style={{width: '100%', flexDirection: 'row',
     justifyContent: 'space-evenly', alignItems: 'center',
     backgroundColor: '#00000022', padding: 10}}>
@@ -108,7 +115,7 @@ export default function App() {
       <FlatList
         data={peers}
         renderItem={({item}) => <ListItem item={item} />}
-        keyExtractor={(index, item) => index + item.ipAddress}
+        keyExtractor={(index) => index}
       />
     </View>
   );
