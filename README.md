@@ -5,7 +5,7 @@ Module that enables the transfer of large files between two devices over Wi-Fi.
 ## Installation
 
 ```sh
-npm install react-native-transfer-big-files
+npm install @arekjaar/react-native-transfer-big-files
 ```
 
 ## Usage
