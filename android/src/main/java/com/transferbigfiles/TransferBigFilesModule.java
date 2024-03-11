@@ -269,7 +269,7 @@ Log.i(TAG, "receiveMessage ");
     }
 
 
-    public static DeviceType getDeviceType(Context context) {
+    public DeviceType getDeviceType(Context context) {
         // Detect TVs via UI mode (Android TVs) or system features (Fire TV).
         if (context.getApplicationContext().getPackageManager().hasSystemFeature("amazon.hardware.fire_tv")) {
             return DeviceType.TV;
@@ -288,7 +288,7 @@ Log.i(TAG, "receiveMessage ");
         }
     }
 
-    private static DeviceType getDeviceTypeFromResourceConfiguration(Context context) {
+    private DeviceType getDeviceTypeFromResourceConfiguration(Context context) {
         int smallestScreenWidthDp = context.getResources().getConfiguration().smallestScreenWidthDp;
 
         if (smallestScreenWidthDp == Configuration.SMALLEST_SCREEN_WIDTH_DP_UNDEFINED) {
@@ -300,7 +300,7 @@ Log.i(TAG, "receiveMessage ");
         }
     }
 
-    private static DeviceType getDeviceTypeFromPhysicalSize(Context context) {
+    private DeviceType getDeviceTypeFromPhysicalSize(Context context) {
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 
         if (windowManager == null) {
@@ -324,7 +324,7 @@ Log.i(TAG, "receiveMessage ");
         }
     }
 
-    private static DeviceType calculateDeviceType(double widthInches, double heightInches) {
+    private DeviceType calculateDeviceType(double widthInches, double heightInches) {
         double diagonalSizeInches = Math.sqrt(Math.pow(widthInches, 2.0) + Math.pow(heightInches, 2.0));
 
         if (diagonalSizeInches >= 3.0 && diagonalSizeInches <= 6.9) {

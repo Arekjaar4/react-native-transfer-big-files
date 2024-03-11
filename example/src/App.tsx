@@ -42,7 +42,7 @@ export default function App() {
     const discoverPeerSubscription = subscribeDiscoverPeer((peers)=>{
       setPeers(JSON.parse(peers))
     })
-    discoverPeers('ip').then(setResult);
+    discoverPeers().then(setResult);
     console.log(result)
     return () => {
       appStateSubscription.remove();
