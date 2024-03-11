@@ -196,7 +196,8 @@ Log.i(TAG, "receiveMessage ");
     } else {
           deviceName = Settings.Global.getString(reactContext.getContentResolver(), Settings.Global.DEVICE_NAME);
     }
-    final int type = DeviceUtils.getDeviceType(reactContext).JSValue;
+    DeviceUtils deviceUtils = new DeviceUtils();
+    final int type = deviceUtils.getDeviceType(reactContext);
     final String deviceNameFinal = deviceName;
     final JSONObject dispositivo = new JSONObject();
     dispositivo.put("deviceName", deviceName);
@@ -250,61 +251,44 @@ Log.i(TAG, "receiveMessage ");
 
 
   public class DeviceUtils {
-    public enum DeviceType {
-        UNKNOWN(0),
-        PHONE(1),
-        TABLET(2),
-        DESKTOP(3),
-        TV(4);
-
-        private final int JSValue;
-
-        DeviceType(int JSValue) {
-            this.JSValue = JSValue;
-        }
-
-        public int getJSValue() {
-            return JSValue;
-        }
-    }
 
 
-    public DeviceType getDeviceType(Context context) {
+    public int getDeviceType(Context context) {
         // Detect TVs via UI mode (Android TVs) or system features (Fire TV).
         if (context.getApplicationContext().getPackageManager().hasSystemFeature("amazon.hardware.fire_tv")) {
-            return DeviceType.TV;
+            return 4; //TV
         }
 
         UiModeManager uiManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
         if (uiManager != null && uiManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION) {
-            return DeviceType.TV;
+            return 4; //TV
         }
 
-        DeviceType deviceTypeFromResourceConfiguration = getDeviceTypeFromResourceConfiguration(context);
-        if (deviceTypeFromResourceConfiguration != DeviceType.UNKNOWN) {
+        int deviceTypeFromResourceConfiguration = getDeviceTypeFromResourceConfiguration(context);
+        if (deviceTypeFromResourceConfiguration != 0) {
             return deviceTypeFromResourceConfiguration;
         } else {
             return getDeviceTypeFromPhysicalSize(context);
         }
     }
 
-    private DeviceType getDeviceTypeFromResourceConfiguration(Context context) {
+    private int getDeviceTypeFromResourceConfiguration(Context context) {
         int smallestScreenWidthDp = context.getResources().getConfiguration().smallestScreenWidthDp;
 
         if (smallestScreenWidthDp == Configuration.SMALLEST_SCREEN_WIDTH_DP_UNDEFINED) {
-            return DeviceType.UNKNOWN;
+            return 0; //UNKNOWN
         } else if (smallestScreenWidthDp >= 600) {
-            return DeviceType.TABLET;
+            return 2; //TABLET
         } else {
-            return DeviceType.PHONE;
+            return 1; //PHONE
         }
     }
 
-    private DeviceType getDeviceTypeFromPhysicalSize(Context context) {
+    private int getDeviceTypeFromPhysicalSize(Context context) {
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 
         if (windowManager == null) {
-            return DeviceType.UNKNOWN;
+            return 0; //UNKNOWN
         }
 
         DisplayMetrics metrics = new DisplayMetrics();
@@ -324,15 +308,15 @@ Log.i(TAG, "receiveMessage ");
         }
     }
 
-    private DeviceType calculateDeviceType(double widthInches, double heightInches) {
+    private int calculateDeviceType(double widthInches, double heightInches) {
         double diagonalSizeInches = Math.sqrt(Math.pow(widthInches, 2.0) + Math.pow(heightInches, 2.0));
 
         if (diagonalSizeInches >= 3.0 && diagonalSizeInches <= 6.9) {
-            return DeviceType.PHONE;
+            return 1; //PHONE
         } else if (diagonalSizeInches > 6.9 && diagonalSizeInches <= 18.0) {
-            return DeviceType.TABLET;
+            return 2; //TABLET
         } else {
-            return DeviceType.UNKNOWN;
+            return 0; //UNKNOWN
         }
     }
 }
