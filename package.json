@@ -1,6 +1,6 @@
 {
   "name": "@arekjaar/react-native-transfer-big-files",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Module that enables the transfer of large files between two devices over Wi-Fi.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",

@@ -27,7 +27,7 @@ export default function App() {
         setPeers([])
       } else {
         console.log('nextAppState: ', nextAppState);
-        discoverPeers('ip').then(setResult);
+        discoverPeers().then(setResult);
       }
     };
 

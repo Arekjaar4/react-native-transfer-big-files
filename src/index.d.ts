@@ -7,6 +7,8 @@ export let subscribeOnFileCopyEnd: (callback: (data: string) => void) => Emitter
 export let subscribeDiscoverPeer: (callback: (data: string) => void) => EmitterSubscription
 export let stopDiscoverPeers: () => void
 
+export let  discoverPeers: () => Promise<string>
+
 export let sendFileTo: (pathToFile: string, address: string) => Promise<{ time: number, file: string }>
 export let receiveFile: (folder: string, fileName: string, forceToScanGallery?: boolean) => Promise<string>
 export let sendMessageTo: (message: string, address: string) => Promise<{ time: number, message: string }>

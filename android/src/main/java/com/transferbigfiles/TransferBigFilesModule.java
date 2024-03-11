@@ -184,7 +184,7 @@ Log.i(TAG, "receiveMessage ");
 
 
   @ReactMethod
-  public void discoverPeers(final String address, final Promise promise) {
+  public void discoverPeers(final Promise promise) {
     try {
     broadcastReceiver = new BroadcastReceiver();
     broadcastSender = new BroadcastSender();

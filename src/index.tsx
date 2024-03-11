@@ -37,7 +37,7 @@ const subscribeDiscoverPeer = (callback: (data: string) => void) => subscribeOnE
 
 const stopDiscoverPeers = () => TransferBigFiles.stopDiscoverPeers();
 
-const discoverPeers = (address: string) => TransferBigFiles.discoverPeers(address);
+const discoverPeers = () => TransferBigFiles.discoverPeers();
 
 const sendFileTo = (pathToFile: string, address: string) => TransferBigFiles.sendFileTo(pathToFile, address);
 
